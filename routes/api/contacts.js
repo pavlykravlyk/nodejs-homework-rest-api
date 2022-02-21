@@ -47,19 +47,23 @@ router.delete("/:contactId", async (req, res, next) => {
     .json({ status: "error", code: 404, message: "Not Found" });
 });
 
-router.put("/:contactId", async (req, res, next) => {
-  const { contactId } = req.params;
-  const { body } = req;
+router.put(
+  "/:contactId",
+  validateContact(contactSchema),
+  async (req, res, next) => {
+    const { contactId } = req.params;
+    const { body } = req;
 
-  const contact = await updateContact(contactId, body);
+    const contact = await updateContact(contactId, body);
 
-  if (contact) {
-    return res.json({ status: "success", code: 200, data: { contact } });
+    if (contact) {
+      return res.json({ status: "success", code: 200, data: { contact } });
+    }
+
+    return res
+      .status(404)
+      .json({ status: "error", code: 404, message: "Not Found" });
   }
-
-  return res
-    .status(404)
-    .json({ status: "error", code: 404, message: "Not Found" });
-});
+);
 
 module.exports = router;
