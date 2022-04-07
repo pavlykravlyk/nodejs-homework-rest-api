@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const validateContact = require("../../middelwares/validation.js");
-const {
-  contactSchema,
-  favoriteSchema,
-} = require("../../schemas/contact-validate");
+const { contactSchema, favoriteSchema } = require("../../schemas");
 
 const {
   getAllContacts,
