@@ -1,17 +1,24 @@
 const { Contact } = require("../../models");
+const HTTP_STATUS_CODES = require("../../lib/constants");
 
 const getOneContactById = async (req, res) => {
   const { contactId } = req.params;
   const result = await Contact.findById(contactId);
-  console.log(result);
+  console.log(req.app.get("lang"));
 
-  result
-    ? res.json({ status: "success", code: 200, data: { result } })
-    : res.json({
-        status: "error",
-        code: 404,
-        message: `Contact with id=${contactId} not found`,
-      });
+  if (result) {
+    return res.json({
+      status: "success",
+      code: HTTP_STATUS_CODES.OK,
+      data: { result },
+    });
+  }
+
+  return res.json({
+    status: "error",
+    code: HTTP_STATUS_CODES.NOT_FOUND,
+    data: { message: `Contact with id=${contactId} not found` },
+  });
 };
 
 module.exports = getOneContactById;

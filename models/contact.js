@@ -7,11 +7,20 @@ const contactSchema = Schema(
     phone: { type: String, required: true },
     favorite: { type: Boolean, default: false },
   },
-  { versionKey: false, timestamps: true }
+  {
+    versionKey: false,
+    timestamps: true,
+    toObject: { virtuals: true },
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        delete ret._id;
+        return ret;
+      },
+    },
+  }
 );
 
 const Contact = model("contact", contactSchema);
 
 module.exports = Contact;
-
-// code: { type: String, required: true, unique: true, match: /^[0-9]{9}$/ },
