@@ -1,4 +1,4 @@
-const validateContact = (schema) => async (req, res, next) => {
+const validation = (schema) => async (req, res, next) => {
   const { body } = req;
 
   try {
@@ -12,4 +12,4 @@ const validateContact = (schema) => async (req, res, next) => {
   }
 };
 
-module.exports = validateContact;
+module.exports = validation;
