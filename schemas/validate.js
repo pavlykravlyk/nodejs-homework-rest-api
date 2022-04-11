@@ -28,6 +28,8 @@ const contactSchema = Joi.object({
       "string.pattern.base":
         "Phone number must be digits and can contain spaces, dashes, parentheses and can start with +",
     }),
+
+  favorite: Joi.boolean(),
 });
 
 module.exports = contactSchema;
