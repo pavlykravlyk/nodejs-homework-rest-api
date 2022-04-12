@@ -4,8 +4,8 @@ const { register } = require("../../controllers/auth");
 
 const validation = require("../../middelwares/validation");
 // const { contactSchema, favoriteSchema } = require("../../schemas");
-const { userSchema } = require("../../schemas");
+const { registerSchema, loginSchema } = require("../../schemas");
 
-router.post("/register", validation(userSchema), register);
+router.post("/register", validation(registerSchema), register);
 
 module.exports = router;
