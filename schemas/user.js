@@ -1,4 +1,5 @@
 const Joi = require("joi");
+// const { User } = require("../models");
 
 const registerSchema = Joi.object({
   password: Joi.string()
@@ -13,7 +14,6 @@ const registerSchema = Joi.object({
       "string.email": "Invalid email address",
     }),
   subscription: Joi.string()
-    .required()
     .valid("starter", "pro", "business")
     .default("starter"),
 });

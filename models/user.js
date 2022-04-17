@@ -13,6 +13,7 @@ const userSchema = Schema(
     },
     subscription: {
       type: String,
+      required: [true, "Subscription is required"],
       enum: ["starter", "pro", "business"],
       default: "starter",
     },
