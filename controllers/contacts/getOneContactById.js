@@ -3,8 +3,10 @@ const HTTP_STATUS_CODES = require("../../lib/constants");
 
 const getOneContactById = async (req, res) => {
   const { contactId } = req.params;
-  const result = await Contact.findById(contactId);
-  console.log(req.app.get("lang"));
+  const result = await Contact.findById({
+    _id: contactId,
+    owner: req._id,
+  }).populate({ path: "owner", select: "email" });
 
   if (result) {
     return res.json({
