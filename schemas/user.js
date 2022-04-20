@@ -1,5 +1,4 @@
 const Joi = require("joi");
-// const { User } = require("../models");
 
 const registerSchema = Joi.object({
   password: Joi.string()
@@ -32,4 +31,11 @@ const loginSchema = Joi.object({
     }),
 });
 
-module.exports = { registerSchema, loginSchema };
+const subsSchema = Joi.object({
+  subscription: Joi.string()
+    .valid("starter", "pro", "business")
+    .default("starter")
+    .required(),
+});
+
+module.exports = { registerSchema, loginSchema, subsSchema };
