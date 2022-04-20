@@ -11,6 +11,7 @@ const updateFavorite = async (req, res) => {
     { favorite },
     { new: true }
   );
+  console.log(result);
 
   if (!body) {
     return res.json({
