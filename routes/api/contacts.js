@@ -13,12 +13,19 @@ const {
 } = require("../../controllers/contacts");
 
 router.get("/", auth, getAllContacts);
-router.get("/:contactId", getOneContactById);
 router.post("/", auth, validation(contactSchema), addNewContact);
-router.delete("/:contactId", deleteOneContactById);
-router.put("/:contactId", validation(contactSchema), updateOneContactById);
+router.get("/:contactId", auth, getOneContactById);
+router.post("/", auth, validation(contactSchema), addNewContact);
+router.delete("/:contactId", auth, deleteOneContactById);
+router.put(
+  "/:contactId",
+  auth,
+  validation(contactSchema),
+  updateOneContactById
+);
 router.patch(
   "/:contactId/favorite",
+  auth,
   validation(favoriteSchema),
   updateFavorite
 );
