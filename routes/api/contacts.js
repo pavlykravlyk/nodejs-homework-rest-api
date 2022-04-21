@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const validateContact = require("../../middelwares/validation.js");
+const { auth, validation } = require("../../middelwares");
 const { contactSchema, favoriteSchema } = require("../../schemas");
 
 const {
@@ -12,14 +12,21 @@ const {
   updateFavorite,
 } = require("../../controllers/contacts");
 
-router.get("/", getAllContacts);
-router.get("/:contactId", getOneContactById);
-router.post("/", validateContact(contactSchema), addNewContact);
-router.delete("/:contactId", deleteOneContactById);
-router.put("/:contactId", validateContact(contactSchema), updateOneContactById);
+router.get("/", auth, getAllContacts);
+router.post("/", auth, validation(contactSchema), addNewContact);
+router.get("/:contactId", auth, getOneContactById);
+router.post("/", auth, validation(contactSchema), addNewContact);
+router.delete("/:contactId", auth, deleteOneContactById);
+router.put(
+  "/:contactId",
+  auth,
+  validation(contactSchema),
+  updateOneContactById
+);
 router.patch(
   "/:contactId/favorite",
-  validateContact(favoriteSchema),
+  auth,
+  validation(favoriteSchema),
   updateFavorite
 );
 

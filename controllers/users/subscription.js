@@ -1,31 +1,31 @@
-const { Contact } = require("../../models");
 const HTTP_STATUS_CODES = require("../../lib/constants");
+const { User } = require("../../models");
 
-const updateFavorite = async (req, res) => {
-  const { contactId } = req.params;
-  const { favorite } = req.body;
+const subscription = async (req, res) => {
+  const { id } = req.user;
+  const { subscription } = req.body;
   const { body } = req;
 
-  const result = await Contact.findByIdAndUpdate(
-    contactId,
-    { favorite },
+  const user = await User.findByIdAndUpdate(
+    id,
+    { subscription },
     { new: true }
   );
-  console.log(result);
+  const { email } = user;
 
   if (!body) {
     return res.json({
       status: "error",
       code: HTTP_STATUS_CODES.BAD_REQUEST,
-      message: "missing field favorite",
+      message: "missing field subscription",
     });
   }
 
-  if (result) {
+  if (user) {
     return res.json({
       status: "success",
       code: HTTP_STATUS_CODES.OK,
-      data: { result },
+      data: { user: { id, email, subscription } },
     });
   }
 
@@ -36,4 +36,4 @@ const updateFavorite = async (req, res) => {
   });
 };
 
-module.exports = updateFavorite;
+module.exports = subscription;
