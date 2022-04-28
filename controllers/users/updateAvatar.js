@@ -4,30 +4,28 @@ const fs = require("fs/promises");
 const HTTP_STATUS_CODES = require("../../lib/constants");
 const Jimp = require("jimp");
 
-const avatarDir = path.join(__dirname, "../../public/avatars");
+const transformAvatar = async (imgPath) => {
+  try {
+    const img = await Jimp.read(imgPath);
+    const { width, height } = img.bitmap;
+    width > height ? img.resize(Jimp.AUTO, 250) : img.resize(250, Jimp.AUTO);
+    img.quality(60);
+    img.write(imgPath);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const updateAvatar = async (req, res) => {
   const { _id: id } = req.user;
-  const { path: pathTemp, originalname } = req.file;
+  const { path: tmpAvatar, originalname } = req.file;
 
-  const avatar = path.join(avatarDir, originalname);
-  const avatarName = `${originalname}-${id}`;
-  const avatarURL = path.join("public/avatars", avatarName);
-
-  if (pathTemp) {
-    Jimp.read(pathTemp, (err, img) => {
-      if (err) {
-        return res.status(HTTP_STATUS_CODES.BAD_REQUEST).json({
-          message: err.message,
-        });
-      }
-
-      img.resize(250, 250).quality(60).write(pathTemp);
-    });
-  }
+  const newAvatar = path.join(__dirname, "../../public/avatars", originalname);
+  const avatarURL = path.join("public/avatars", `${id}.${originalname}`);
 
   try {
-    await fs.rename(pathTemp, avatar);
+    await transformAvatar(tmpAvatar);
+    await fs.rename(tmpAvatar, newAvatar);
     await User.findByIdAndUpdate(id, { avatarURL });
 
     res.status(HTTP_STATUS_CODES.OK).json({
@@ -35,7 +33,7 @@ const updateAvatar = async (req, res) => {
       avatarURL,
     });
   } catch (error) {
-    await fs.unlink(pathTemp);
+    await fs.unlink(tmpAvatar);
 
     res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).json({
       message: "Error updating avatar",
