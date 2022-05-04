@@ -8,13 +8,15 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-  if (!user) {
+
+  if (!user || !user.verify) {
     res
       .status(HTTP_STATUS_CODES.UNAUTHORIZED)
-      .json({ message: `User ${user} not found. Please register` });
+      .json({ message: `User ${email} not found. Please register` });
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
+
   if (!isPasswordValid) {
     res
       .status(HTTP_STATUS_CODES.UNAUTHORIZED)
